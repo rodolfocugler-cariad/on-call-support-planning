@@ -1,7 +1,7 @@
 {
     "weekQuantity": 6,
     "numberOfPopulations": 40,
-    "numberOfEpochs": 200,
+    "numberOfEpochs": 15,
     "numberOfEmployeesDoingOnCall": 2,
     "employeeNames": [
         "Paul",
