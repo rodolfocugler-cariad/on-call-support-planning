@@ -77,7 +77,7 @@ def write_pdf():
     weeks = np.sort(schedule["Week"].unique()).tolist()
     write_page(weeks, schedule, writer)
 
-    date = datetime.strptime(schedule["Date"][0], "%d/%m/%Y").date()
+    date = datetime.strptime(schedule["Date"].iloc[0], "%d/%m/%Y").date()
 
     filename = f"{date.strftime('%b')}_{date.strftime('%Y')}_{config['Name'].replace(' ', '_')}_{config['Vorname'].replace(' ', '_')}"
     with open(f"./resources/{filename}.pdf", "wb") as output_stream:
