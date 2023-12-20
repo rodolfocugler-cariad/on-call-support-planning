@@ -25,7 +25,7 @@ git clone git@github.com:rodolfocugler-hexad/on-call-support-planning.git
 ```bash
 python3 -m pip install -r requirements.txt
 ```
-3. Run the code and create the ./template.json using the option 1
+3. Run the code and create the ./resources/template.json using the option 1
 ```bash
 python3 main.py
 ```
@@ -84,7 +84,7 @@ python3 main.py
 
 ![run.png](public%2Frun.png)
 
-The algorithm will create a csv file called ./result.csv. It holds all the support schedule;
+The algorithm will create a csv file called ./resources/result.csv. It holds all the support schedule;
 
 ```CSV
 Date,Day Of Week,On-Call 1,On-Call 2

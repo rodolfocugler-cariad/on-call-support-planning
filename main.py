@@ -23,7 +23,7 @@ def map_on_call_not_possible(config: dict):
 
 
 def run_algorithm():
-    with open("template.json", "r") as f:
+    with open("./resources/template.json", "r") as f:
         config = json.load(f)
 
     week_quantity = config["weekQuantity"]
@@ -50,7 +50,7 @@ def run_algorithm():
     if best_population is not None:
         logging.debug(best_population.on_call_schedule)
         logging.info(f"Best score: {best_population.score:.2f}")
-        logging.info("Result was saved on ./result.csv")
+        logging.info("Result was saved on ./resources/result.csv")
         best_population.save(datetime.strptime(config["startDate"], "%d/%m/%Y").date())
     else:
         logging.info("No valid result was found - run again")
@@ -72,10 +72,10 @@ def create_template():
     for days in range(7 * week_quantity):
         config[(date + timedelta(days=days)).strftime("%d/%m/%Y")] = ""
 
-    with open("template.json", "w") as f:
-        f.write(json.dumps(config, indent=4, sort_keys=False))
+    with open("./resources/template.json", "w") as f:
+        f.write(json.dumps(config, indent=2, sort_keys=False))
 
-    logging.info("template saved on ./template.json")
+    logging.info("template saved on ./resources/template.json")
 
 
 def configure_logging():

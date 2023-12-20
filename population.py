@@ -153,7 +153,8 @@ class Population:
         self.on_call_schedule["Date"] = dates
         self.on_call_schedule["Day Of Week"] = day_of_week
         self.on_call_schedule.rename(inplace=True, columns={0: "On-Call 1", 1: "On-Call 2"})
-        self.on_call_schedule[["Date", "Day Of Week", "On-Call 1", "On-Call 2"]].to_csv("./result.csv", index=False)
+        self.on_call_schedule[["Date", "Day Of Week", "On-Call 1", "On-Call 2"]].to_csv("./resources/result.csv",
+                                                                                        index=False)
 
     @staticmethod
     def create_population(employees: list, number_of_employees_doing_on_call: int, on_call_not_possible: dict,
