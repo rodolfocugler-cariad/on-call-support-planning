@@ -36,11 +36,14 @@ def run_algorithm():
     generation = Generation.create_generation(number_of_populations, number_of_employees_doing_on_call, employee_names,
                                               week_quantity, on_call_not_possible)
     best_population = None
+    best_invalid_population = None
     while generation.epoch < number_of_epochs and (best_population is None or best_population.score < 100):
         new_best_population = generation.get_best_population()
-        if ((best_population is None or best_population.score < new_best_population.score)
-                and not new_best_population.invalid):
-            best_population = new_best_population
+        if best_population is None or best_population.score < new_best_population.score:
+            if not new_best_population.invalid:
+                best_population = new_best_population
+            else:
+                best_invalid_population = new_best_population
 
         invalid_str = " (invalid schedule)" if new_best_population.invalid else " (valid schedule)"
         logging.info(f"epoch: {generation.epoch} - score: {new_best_population.score:.2f} {invalid_str}")
@@ -54,6 +57,9 @@ def run_algorithm():
         best_population.save(datetime.strptime(config["startDate"], "%d/%m/%Y").date())
     else:
         logging.info("No valid result was found - run again")
+        logging.info(f"Best invalid score: {best_invalid_population.score:.2f}")
+        logging.info("Result was saved on ./resources/invalid-result.csv")
+        best_invalid_population.save(datetime.strptime(config["startDate"], "%d/%m/%Y").date(), "invalid-result.csv")
 
 
 def create_template():

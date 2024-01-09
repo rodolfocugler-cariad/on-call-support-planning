@@ -30,7 +30,8 @@ def _select_next_employee(sorted_employees: list, employees: list, employees_of_
             sorted_employees = _sort_employees(employees)
         employee = sorted_employees.pop()
     for e in employee_aux:
-        sorted_employees.append(e)
+        if employee_aux.count(e) < 2:
+            sorted_employees.append(e)
     return employee, sorted_employees
 
 
@@ -53,14 +54,14 @@ class Population:
     def get_score_to_str(self):
         return ', '.join(e.get_score_to_str() for e in self.evaluation)
 
-    def save(self, start_date):
+    def save(self, start_date, name="result.csv"):
         dates = [(start_date + timedelta(days=i)).strftime("%d/%m/%Y") for i in range(self.on_call_schedule.shape[0])]
         day_of_week = [datetime.strptime(i, "%d/%m/%Y").date().strftime('%A') for i in dates]
 
         self.on_call_schedule["Date"] = dates
         self.on_call_schedule["Day Of Week"] = day_of_week
         self.on_call_schedule.rename(inplace=True, columns={0: "On-Call 1", 1: "On-Call 2"})
-        self.on_call_schedule[["Date", "Day Of Week", "On-Call 1", "On-Call 2"]].to_csv("./resources/result.csv",
+        self.on_call_schedule[["Date", "Day Of Week", "On-Call 1", "On-Call 2"]].to_csv(f"./resources/{name}",
                                                                                         index=False)
 
     @staticmethod
@@ -72,8 +73,11 @@ class Population:
         for p in possibilities:
             employees_of_week = []
             for employee_index in range(number_of_employees_doing_on_call):
-                employee, sorted_employees = _select_next_employee(sorted_employees, employees,
-                                                                   p["excludedEmployees"] + employees_of_week)
+                if len(employees) - len(p["excludedEmployees"]) == employee_index:
+                    employee = ""
+                else:
+                    employee, sorted_employees = _select_next_employee(sorted_employees, employees,
+                                                                       p["excludedEmployees"] + employees_of_week)
                 employees_of_week.append(employee)
             for day in range(p["days"]):
                 schedule.append(employees_of_week)
@@ -96,7 +100,11 @@ class Population:
                 # If the variable days is high (i.e. 7), on-call schedule is more stable
                 # it means the same person will do support in the whole week,
                 # but it becomes more difficult to find a schedule
-                days = int(os.getenv("DAYS", "3")) if not should_split_week else 2
+                days = os.getenv("DAYS")
+                if days is None:
+                    days = 3 if not should_split_week else 2
+                else:
+                    days = int(days)
                 columns = None
                 count = 0
                 while columns is None or (

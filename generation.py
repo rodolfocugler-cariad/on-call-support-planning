@@ -42,10 +42,14 @@ class Generation:
             new_population = []
 
             for week in range(self.week_quantity):
-                alpha = 7 if self.epoch < 20 else random.randrange(1, 7)
+                alpha = 7 if self.epoch < 30 else random.randrange(1, 7)
                 for day in range(week * 7, (week * 7) + alpha):
                     schedule = population_0[day] if week % 2 == 0 else population_1[day]
                     new_population.append(schedule)
+                for day in range((week * 7) + alpha, (week + 1) * 7):
+                    schedule = population_0[day] if week % 2 != 0 else population_1[day]
+                    new_population.append(schedule)
+
             populations.append(Population(new_population, self.on_call_not_possible, employees=self.employees))
 
         populations = [

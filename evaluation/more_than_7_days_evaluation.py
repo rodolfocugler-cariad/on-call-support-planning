@@ -24,6 +24,7 @@ class MoreThan7DaysEvaluation(Evaluation):
 
             df = pd.concat([df, pd.DataFrame(values, columns=columns)], axis=1)
         count_df = df.apply(pd.Series.value_counts, axis=1).drop(columns=['0'])
+        count_df = count_df.drop(columns=[""], errors='ignore')
         count_df = count_df[(count_df >= 8)].dropna(axis=0, how='all')
 
         if count_df.shape[0] > 0:
